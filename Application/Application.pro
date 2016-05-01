@@ -12,9 +12,11 @@ TARGET = Application
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    gamehandler.cpp
 
-HEADERS += mainwindow.h
+HEADERS += mainwindow.h \
+    gamehandler.h
 
 FORMS += mainwindow.ui
 

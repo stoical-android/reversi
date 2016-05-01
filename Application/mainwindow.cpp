@@ -3,10 +3,16 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    new_game_flag{false},
+    game_running{false},
+    cancel_flag{false},
+    exit_flag{false},
+    bg_thread_finished{false}
 {
     ui->setupUi(this);
     createGameBoard();
+    QObject::connect(ui->start_button, SIGNAL(clicked()), this, SLOT(startBtnClicked()));
 }
 
 MainWindow::~MainWindow()
@@ -36,4 +42,38 @@ void MainWindow::fieldClicked()
     int index = ui->grid_layout->indexOf(field);
     int row{0}, column{0}, row_span{0}, column_span{0};
     ui->grid_layout->getItemPosition(index, &row, &column, &row_span, &column_span);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    exit_flag = true;
+    while(!bg_thread_finished){}
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    event->accept();
+}
+
+void MainWindow::startBtnClicked()
+{
+    if(!game_running)
+    {
+        new_game_flag = true;
+    }
+    else
+    {
+        cancel_flag = true;
+    }
+}
+
+void MainWindow::setUpGame()
+{
+    new_game_flag = false;
+    game_running = true;
+    ui->start_button->setText("Abandon");
+}
+
+void MainWindow::clearGame()
+{
+    cancel_flag = false;
+    game_running = false;
+    ui->start_button->setText("New Game");
 }
