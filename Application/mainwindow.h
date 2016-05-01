@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    void createGameBoard();
 };
 
 #endif // MAINWINDOW_H
